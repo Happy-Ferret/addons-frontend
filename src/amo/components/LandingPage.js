@@ -6,6 +6,8 @@ import { connect } from 'react-redux';
 
 import LandingAddonsCard from 'amo/components/LandingAddonsCard';
 import { loadLandingAddons } from 'amo/utils';
+import { API_THEME_TYPE, EXTENSION_TYPE } from 'core/constants';
+import { apiAddonType } from 'core/utils';
 import translate from 'core/i18n/translate';
 
 import './LandingPage.scss';
@@ -24,7 +26,7 @@ export class LandingPageBase extends React.Component {
     const { i18n } = this.props;
 
     const contentForTypes = {
-      extension: {
+      [EXTENSION_TYPE]: {
         featuredHeader: i18n.gettext('Featured extensions'),
         // TODO: Add this search/route, see:
         // https://github.com/mozilla/addons-frontend/issues/1535
@@ -36,17 +38,17 @@ export class LandingPageBase extends React.Component {
         popularHeader: i18n.gettext('Most popular extensions'),
         popularFooterLink: {
           pathname: '/search/',
-          query: { addonType: 'extension', sort: 'hotness' },
+          query: { sort: 'hotness', type: EXTENSION_TYPE },
         },
         popularFooterText: i18n.gettext('More popular extensions'),
         highlyRatedHeader: i18n.gettext('Top rated extensions'),
         highlyRatedFooterLink: {
           pathname: '/search/',
-          query: { addonType: 'extension', sort: 'rating' },
+          query: { sort: 'rating', type: EXTENSION_TYPE },
         },
         highlyRatedFooterText: i18n.gettext('More highly rated extensions'),
       },
-      theme: {
+      [API_THEME_TYPE]: {
         featuredHeader: i18n.gettext('Featured themes'),
         // TODO: Add this search/route, see:
         // https://github.com/mozilla/addons-frontend/issues/1535
@@ -58,13 +60,13 @@ export class LandingPageBase extends React.Component {
         popularHeader: i18n.gettext('Most popular themes'),
         popularFooterLink: {
           pathname: '/search/',
-          query: { addonType: 'theme', sort: 'hotness' },
+          query: { sort: 'hotness', type: API_THEME_TYPE },
         },
         popularFooterText: i18n.gettext('More popular themes'),
         highlyRatedHeader: i18n.gettext('Top rated themes'),
         highlyRatedFooterLink: {
           pathname: '/search/',
-          query: { addonType: 'theme', sort: 'rating' },
+          query: { sort: 'rating', type: API_THEME_TYPE },
         },
         highlyRatedFooterText: i18n.gettext('More highly rated themes'),
       },
@@ -105,12 +107,9 @@ export class LandingPageBase extends React.Component {
   }
 }
 
-export function singularizeAddonType(state, ownProps) {
-  return { addonType: ownProps.params.pluralAddonType.replace(/s$/, '') };
-}
-
-export function mapStateToProps(state) {
+export function mapStateToProps(state, ownProps) {
   return {
+    addonType: apiAddonType(ownProps.params.pluralAddonType),
     featuredAddons: state.landing.featured.results,
     highlyRatedAddons: state.landing.highlyRated.results,
     popularAddons: state.landing.popular.results,
@@ -122,6 +121,5 @@ export default compose(
     { deferred: true, promise: loadLandingAddons },
   ]),
   connect(mapStateToProps),
-  connect(singularizeAddonType),
   translate({ withRef: true }),
 )(LandingPageBase);

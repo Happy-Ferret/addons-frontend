@@ -42,6 +42,22 @@ export const validAddonTypes = [
   EXTENSION_TYPE,
   THEME_TYPE,
 ];
+// Mapping of the add-on types we show in URLs, etc. and what they map
+// to in the API (and how they're represented internally in the app).
+//
+// Examples:
+// * '/extensions/' -> 'extension'
+// * '/themes/' -> 'persona'
+export const API_ADDON_TYPES_MAPPING = {
+  extensions: EXTENSION_TYPE,
+  themes: API_THEME_TYPE,
+};
+export const VISIBLE_ADDON_TYPES_MAPPING = Object.keys(API_ADDON_TYPES_MAPPING)
+  .reduce((object, key) => {
+    // eslint-disable-next-line no-param-reassign
+    object[API_ADDON_TYPES_MAPPING[key]] = key;
+    return object;
+  }, {});
 
 // Action types.
 export const CATEGORIES_GET = 'CATEGORIES_GET';

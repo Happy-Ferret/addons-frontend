@@ -8,6 +8,7 @@ import * as categoriesActions from 'core/actions/categories';
 import * as api from 'core/api';
 import {
   addQueryParams,
+  apiAddonType,
   convertBoolean,
   findAddon,
   getClientApp,
@@ -18,9 +19,19 @@ import {
   loadAddonIfNeeded,
   loadCategoriesIfNeeded,
   nl2br,
+  visibleAddonType,
 } from 'core/utils';
 import { unexpectedSuccess } from 'tests/client/helpers';
 
+
+describe('apiAddonType', () => {
+  assert.equal(apiAddonType('extensions'), 'extension');
+  assert.equal(apiAddonType('themes'), 'persona');
+  assert.throws(() => {
+    // "theme" is not a valid pluralAddonType mapping; it should be "themes".
+    apiAddonType('theme');
+  }, '"theme" not found in API_ADDON_TYPES_MAPPING');
+});
 
 describe('getClientConfig', () => {
   const fakeConfig = new Map();
@@ -471,4 +482,13 @@ describe('ngettext', () => {
   it('outputs plural when count is above one', () => {
     assert.equal('2 files', fileCount(2));
   });
+});
+
+describe('visibleAddonType', () => {
+  assert.equal(visibleAddonType('extension'), 'extensions');
+  assert.equal(visibleAddonType('persona'), 'themes');
+  assert.throws(() => {
+    // "theme" is not a valid pluralAddonType mapping; it should be "themes".
+    visibleAddonType('personas');
+  }, '"personas" not found in VISIBLE_ADDON_TYPES_MAPPING');
 });

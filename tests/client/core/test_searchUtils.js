@@ -1,6 +1,7 @@
 import createStore from 'amo/store';
 import * as searchActions from 'core/actions/search';
 import * as api from 'core/api';
+import { API_THEME_TYPE } from 'core/constants';
 import { loadByCategoryIfNeeded, mapStateToProps } from 'core/searchUtils';
 
 
@@ -27,15 +28,15 @@ describe('searchUtils loadByCategoryIfNeeded()', () => {
 
   before(() => {
     filters = {
-      addonType: 'theme',
+      addonType: API_THEME_TYPE,
       category: 'anime',
       clientApp: 'android',
     };
     ownProps = {
       location: { query: {} },
       params: {
-        addonType: 'theme',
         application: 'android',
+        pluralAddonType: 'themes',
         slug: 'anime',
       },
     };

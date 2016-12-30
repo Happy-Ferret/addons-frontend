@@ -1,12 +1,13 @@
 import createStore from 'amo/store';
 import * as landingActions from 'amo/actions/landing';
 import * as api from 'core/api';
+import { API_THEME_TYPE } from 'core/constants';
 import { loadLandingAddons } from 'amo/utils';
 
 
 describe('amo/utils', () => {
   describe('loadLandingAddons()', () => {
-    const addonType = 'theme';
+    const addonType = API_THEME_TYPE;
     let ownProps;
 
     beforeEach(() => {
